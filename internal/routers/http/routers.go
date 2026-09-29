@@ -1,7 +1,7 @@
 package http_auth_routers
 
 import (
-	app_server "authService/internal/configs/server"
+	app_http_server "authService/internal/configs/server/http"
 	"authService/internal/midelware"
 	usecases "authService/internal/useCases"
 	"context"
@@ -29,8 +29,8 @@ func NewAuthHandler(service AuthService, validator *validator.Validate) AuthHand
 	}
 }
 
-func (h *AuthHandler) Routers() []app_server.Route {
-	return []app_server.Route{
+func (h *AuthHandler) Routers() []app_http_server.Route {
+	return []app_http_server.Route{
 		{
 			Path:    "/register",
 			Method:  http.MethodPost,

@@ -1,4 +1,4 @@
-package app_server
+package app_http_server
 
 import (
 	"authService/internal/midelware"
