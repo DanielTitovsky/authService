@@ -1,6 +1,7 @@
 package main
 
 import (
+	app_kafka_client "authService/internal/configs/client/kafka"
 	app_repository "authService/internal/configs/repository"
 	app_grpc_server "authService/internal/configs/server/grpc"
 	app_http_server "authService/internal/configs/server/http"
@@ -41,9 +42,17 @@ func main() {
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
 
+	//Создвние kafka продюсера
+	kafkaConfig := app_kafka_client.NewConfig("localhost:9092")
+	kafkaClient, err := app_kafka_client.NewKafkaClient(kafkaConfig)
+
+	if err != nil {
+		log.Fatal("Failed to create kafka client: %w", err)
+	}
+
 	//Auth
 	authRepository := pgx_repository.AuthRepository(connectinPool)
-	authService := auth_services.NewAuthService(&authRepository)
+	authService := auth_services.NewAuthService(&authRepository, &kafkaClient)
 	authHandlers := http_auth_routers.NewAuthHandler(&authService, validate)
 
 	//Создание сервера GRPC

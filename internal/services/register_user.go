@@ -27,6 +27,15 @@ func (s *AuthService) RegisterUser(ctx context.Context, userData usecases.Regist
 		return usecases.RegisterResult{}, fmt.Errorf("Failed saving user: %w", err)
 	}
 
+	event := usecases.RegisterUserEvent{
+		Id:    savedUser.Id,
+		Email: savedUser.Email,
+	}
+
+	if err := s.kafkaClient.PublishUserRegistered(ctx, event); err != nil {
+		return usecases.RegisterResult{}, fmt.Errorf("Failed to published auth user event: %w", err)
+	}
+
 	accessToken, refreshToken, err := s.createTokenPair(ctx, savedUser.Id)
 
 	if err != nil {

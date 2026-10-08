@@ -1,6 +1,10 @@
 package usecases
 
-import "authService/internal/domain"
+import (
+	"authService/internal/domain"
+
+	"github.com/google/uuid"
+)
 
 type RegisterTransportDto struct {
 	Email       string `json:"email" validate:"required,email" db:"email"`
@@ -20,6 +24,11 @@ type RegisterResult struct {
 	User         domain.User
 	AccessToken  string
 	RefreshToken string
+}
+
+type RegisterUserEvent struct {
+	Id    uuid.UUID `json:"id"`
+	Email string    `json:"email" validate:"required,email" db:"email"`
 }
 
 // {
