@@ -3,6 +3,7 @@ package app_kafka_client
 import (
 	usecases "authService/internal/useCases"
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/twmb/franz-go/pkg/kgo"
@@ -29,7 +30,14 @@ func NewKafkaClient(config Config) (KafkaClient, error) {
 }
 
 func (kc *KafkaClient) PublishUserRegistered(ctx context.Context, event usecases.RegisterUserEvent) error {
-	record := &kgo.Record{Topic: "AuthUser", Value: []byte(event.Email)}
+
+	payload, err := json.Marshal(event)
+
+	if err != nil {
+		return fmt.Errorf("failed to parse event: %w", err)
+	}
+
+	record := &kgo.Record{Topic: "AuthUser", Value: payload}
 
 	if err := kc.cl.ProduceSync(ctx, record).FirstErr(); err != nil {
 		return fmt.Errorf("record had a produce error while synchronously producing: %v\n", err)
