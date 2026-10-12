@@ -28,8 +28,8 @@ func (s *AuthService) RegisterUser(ctx context.Context, userData usecases.Regist
 	}
 
 	event := usecases.RegisterUserEvent{
-		Id:    savedUser.Id,
-		Email: savedUser.Email,
+		UserId: savedUser.Id,
+		Email:  savedUser.Email,
 	}
 
 	if err := s.kafkaClient.PublishUserRegistered(ctx, event); err != nil {

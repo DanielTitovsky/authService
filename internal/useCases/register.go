@@ -27,8 +27,8 @@ type RegisterResult struct {
 }
 
 type RegisterUserEvent struct {
-	Id    uuid.UUID `json:"id"`
-	Email string    `json:"email" validate:"required,email" db:"email"`
+	UserId uuid.UUID `json:"id"`
+	Email  string    `json:"email" validate:"required,email" db:"email"`
 }
 
 // {
